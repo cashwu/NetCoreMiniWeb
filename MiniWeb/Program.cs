@@ -1,3 +1,14 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿Console.WriteLine("Hello, World!");
 
-Console.WriteLine("Hello, World!");
+var host = new WebHostBuilder()
+           .UseKestrel()
+           .Configure(app => app.Map("/echo", context =>
+           {
+               context.Run(async httpContext =>
+               {
+                   await httpContext.Response.WriteAsync("ok");
+               });
+           }))
+           .Build();
+
+host.Run();
