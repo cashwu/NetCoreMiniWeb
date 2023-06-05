@@ -26,11 +26,3 @@ public class IndexTests
         resp.Should().Be("Hello World - 123");
     }
 }
-
-public class TestPeopleService : IPeopleService
-{
-    public int GetAge()
-    {
-        return 123;
-    }
-}
