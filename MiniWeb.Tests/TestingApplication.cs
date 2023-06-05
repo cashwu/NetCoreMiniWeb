@@ -8,6 +8,8 @@ namespace MiniWeb.Tests;
 
 public class TestingApplication : WebApplicationFactory<Program>
 {
+    protected HttpClient Client => CreateClient();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
@@ -31,7 +33,7 @@ public class TestingApplication : WebApplicationFactory<Program>
         });
     }
 
-    public void DbOperator(Action<AppDbContext> action)
+    protected void DbOperator(Action<AppDbContext> action)
     {
         using var serviceScope = Services.CreateScope();
         var serviceProvider = serviceScope.ServiceProvider;
@@ -39,6 +41,4 @@ public class TestingApplication : WebApplicationFactory<Program>
         var appDbContext = serviceProvider.GetRequiredService<AppDbContext>();
         action.Invoke(appDbContext);
     }
-
-    public HttpClient Client => CreateClient();
 }

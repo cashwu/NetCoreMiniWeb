@@ -3,14 +3,12 @@ using FluentAssertions;
 
 namespace MiniWeb.Tests;
 
-public class IndexTests
+public class IndexTests : TestingApplication
 {
     [Fact]
     public async Task Index()
     {
-        await using var application = new TestingApplication();
-
-        var resp = await application.Client.GetStringAsync("/");
+        var resp = await Client.GetStringAsync("/");
 
         resp.Should().Be("Hello World - 123");
     }
@@ -18,9 +16,7 @@ public class IndexTests
     [Fact]
     public async Task People()
     {
-        await using var application = new TestingApplication();
-
-        application.DbOperator(db =>
+        DbOperator(db =>
         {
             db.People.Add(new People(11, "AA"));
             db.People.Add(new People(22, "BB"));
@@ -28,7 +24,7 @@ public class IndexTests
             db.SaveChanges();
         });
 
-        var resp = await application.Client.GetFromJsonAsync<List<People>>("/People");
+        var resp = await Client.GetFromJsonAsync<List<People>>("/People");
 
         resp.Count.Should().Be(3);
 
