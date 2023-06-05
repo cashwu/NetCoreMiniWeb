@@ -10,14 +10,7 @@ public class IndexTests
     [Fact]
     public async Task Index()
     {
-        await using var application = new WebApplicationFactory<Program>()
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddScoped<IPeopleService, TestPeopleService>();
-                });
-            });
+        await using var application = new TestingApplication();
 
         using var client = application.CreateClient();
 
