@@ -10,9 +10,7 @@ public class IndexTests
     {
         await using var application = new TestingApplication();
 
-        using var client = application.CreateClient();
-
-        var resp = await client.GetStringAsync("/");
+        var resp = await application.Client.GetStringAsync("/");
 
         resp.Should().Be("Hello World - 123");
     }
@@ -22,9 +20,15 @@ public class IndexTests
     {
         await using var application = new TestingApplication();
 
-        using var client = application.CreateClient();
+        application.DbOperator(db =>
+        {
+            db.People.Add(new People(11, "AA"));
+            db.People.Add(new People(22, "BB"));
+            db.People.Add(new People(3, "C"));
+            db.SaveChanges();
+        });
 
-        var resp = await client.GetFromJsonAsync<List<People>>("/People");
+        var resp = await application.Client.GetFromJsonAsync<List<People>>("/People");
 
         resp.Count.Should().Be(3);
 
@@ -32,7 +36,7 @@ public class IndexTests
         {
             new(11, "AA"),
             new(22, "BB"),
-            new(33, "CC"),
+            new(3, "C"),
         };
 
         resp.Should().BeEquivalentTo(expect);

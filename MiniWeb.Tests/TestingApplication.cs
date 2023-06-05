@@ -28,12 +28,17 @@ public class TestingApplication : WebApplicationFactory<Program>
 
             appDbContext.Database.EnsureDeleted();
             appDbContext.Database.EnsureCreated();
-
-            appDbContext.People.Add(new People(11, "AA"));
-            appDbContext.People.Add(new People(22, "BB"));
-            appDbContext.People.Add(new People(33, "CC"));
-
-            appDbContext.SaveChanges();
         });
     }
+
+    public void DbOperator(Action<AppDbContext> action)
+    {
+        using var serviceScope = Services.CreateScope();
+        var serviceProvider = serviceScope.ServiceProvider;
+
+        var appDbContext = serviceProvider.GetRequiredService<AppDbContext>();
+        action.Invoke(appDbContext);
+    }
+
+    public HttpClient Client => CreateClient();
 }
