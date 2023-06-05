@@ -7,7 +7,8 @@ builder.Services.AddScoped<IPeopleService, PeopleService>();
 
 builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 {
-    optionsBuilder.UseInMemoryDatabase("InMemoryDB");
+    // optionsBuilder.UseInMemoryDatabase("InMemoryDB");
+    optionsBuilder.UseSqlite("Data Source=app.db");
 });
 
 var app = builder.Build();
@@ -20,14 +21,14 @@ app.MapGet("/people", async (AppDbContext dbContext) =>
     return peoples;
 });
 
-using var serviceScope = app.Services.CreateScope();
-var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-appDbContext.Database.EnsureDeleted();
-appDbContext.Database.EnsureCreated();
-appDbContext.People.Add(new People(1, "AA"));
-appDbContext.People.Add(new People(2, "BB"));
-appDbContext.People.Add(new People(3, "CC"));
-await appDbContext.SaveChangesAsync();
+// using var serviceScope = app.Services.CreateScope();
+// var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+// appDbContext.Database.EnsureDeleted();
+// appDbContext.Database.EnsureCreated();
+// appDbContext.People.Add(new People(1, "AA"));
+// appDbContext.People.Add(new People(2, "BB"));
+// appDbContext.People.Add(new People(3, "CC"));
+// await appDbContext.SaveChangesAsync();
 
 app.Run();
 
