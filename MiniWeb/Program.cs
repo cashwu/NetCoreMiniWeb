@@ -1,14 +1,7 @@
-﻿Console.WriteLine("Hello, World!");
+﻿var builder = WebApplication.CreateBuilder(args);
 
-var host = new WebHostBuilder()
-           .UseKestrel()
-           .Configure(app => app.Map("/echo", context =>
-           {
-               context.Run(async httpContext =>
-               {
-                   await httpContext.Response.WriteAsync("ok");
-               });
-           }))
-           .Build();
+var app = builder.Build();
 
-host.Run();
+app.MapGet("/", () => "Hello World");
+
+app.Run();
