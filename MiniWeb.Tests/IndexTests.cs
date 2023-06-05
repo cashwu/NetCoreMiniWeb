@@ -36,5 +36,10 @@ public class IndexTests : TestingApplication
         };
 
         resp.Should().BeEquivalentTo(expect);
+        
+        DbOperator(db =>
+        {
+            db.People.Count().Should().Be(3);
+        });
     }
 }
